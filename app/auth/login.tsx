@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -8,21 +8,29 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { useAuth } from "../context/auth";
 import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
 
 export default function LoginScreen() {
+  const { isAuthenticated, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    console.log("yahan aaaya", isAuthenticated);
+    if (isAuthenticated) {
+      router.replace("/(tabs)/home");
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = () => {
     if (!email || !password) {
       alert("Please fill in all fields");
       return;
     }
-    // TODO: Implement login logic
-    console.log("Login attempt with:", { email, password });
+    login(email, password);
   };
 
   const handleForgotPassword = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,13 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { useAuth } from "../context/auth";
 import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
 
 export default function SignupScreen() {
+  const { isAuthenticated, login, setUserType } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,13 +24,21 @@ export default function SignupScreen() {
     type: "",
   });
 
+  useEffect(() => {
+    console.log("yahan aaaya", isAuthenticated);
+    if (isAuthenticated) {
+      router.replace("/(tabs)/home");
+    }
+  }, [isAuthenticated]);
+
   const handleSignup = () => {
     // Validate form
     if (
       !formData.name ||
       !formData.email ||
       !formData.password ||
-      !formData.confirmPassword
+      !formData.confirmPassword ||
+      !formData.type
     ) {
       alert("Please fill in all fields");
       return;
@@ -37,8 +47,10 @@ export default function SignupScreen() {
       alert("Passwords do not match");
       return;
     }
-    // TODO: Implement signup logic
-    console.log("Signup data:", formData);
+
+    // Set user type and login
+    setUserType(formData.type as "patient" | "doctor");
+    login(formData.email, formData.password);
   };
 
   return (

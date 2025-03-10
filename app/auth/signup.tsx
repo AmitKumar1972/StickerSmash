@@ -8,14 +8,15 @@ import {
   Platform,
   ScrollView,
   KeyboardAvoidingView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import { router, Redirect } from "expo-router";
+import { router } from "expo-router";
 import { useAuth } from "../context/auth";
-import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
 
 export default function SignupScreen() {
-  const { isAuthenticated, login, setUserType } = useAuth();
+  const { isAuthenticated, signup, isLoading } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,15 +24,16 @@ export default function SignupScreen() {
     confirmPassword: "",
     type: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    console.log("yahan aaaya", isAuthenticated);
     if (isAuthenticated) {
-      router.replace("/(tabs)/home");
+      // Redirect to home page when authenticated
+      router.replace("/(tabs)");
     }
   }, [isAuthenticated]);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     // Validate form
     if (
       !formData.name ||
@@ -40,18 +42,50 @@ export default function SignupScreen() {
       !formData.confirmPassword ||
       !formData.type
     ) {
-      alert("Please fill in all fields");
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      Alert.alert("Error", "Passwords do not match");
       return;
     }
 
-    // Set user type and login
-    setUserType(formData.type as "patient" | "doctor");
-    login(formData.email, formData.password);
+    setIsSubmitting(true);
+
+    try {
+      const success = await signup(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.type as "patient" | "doctor"
+      );
+
+      if (!success) {
+        Alert.alert(
+          "Error",
+          "Failed to create account. Please try again later."
+        );
+      } else {
+        console.log("Signup successful");
+        // Navigation is handled by the useEffect in this component
+        // that watches for isAuthenticated changes
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Show loading indicator while checking authentication state
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6c5ce7" />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -130,8 +164,16 @@ export default function SignupScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignup}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        <TouchableOpacity
+          style={[styles.button, isSubmitting && styles.buttonDisabled]}
+          onPress={handleSignup}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Sign Up</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push("/auth/login")}>
@@ -147,6 +189,12 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#f8f9fa",
   },
   scrollContent: {
@@ -265,5 +313,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#6c5ce7",
     fontWeight: "500",
+  },
+  buttonDisabled: {
+    opacity: 0.7,
   },
 });

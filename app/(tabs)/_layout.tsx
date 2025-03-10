@@ -1,10 +1,14 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useAuth } from "../context/auth";
 
 export default function TabLayout() {
-  const { userType } = useAuth();
-  console.log("yeh h india");
+  const { userType, isAuthenticated, isLoading } = useAuth();
+
+  // If not authenticated, redirect to login
+  if (!isLoading && !isAuthenticated) {
+    return <Redirect href="/auth/login" />;
+  }
 
   return (
     <Tabs

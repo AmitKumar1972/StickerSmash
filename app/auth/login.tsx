@@ -7,36 +7,66 @@ import {
   Platform,
   ScrollView,
   KeyboardAvoidingView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import { router, Redirect } from "expo-router";
+import { router } from "expo-router";
 import { useAuth } from "../context/auth";
-import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
 
 export default function LoginScreen() {
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    console.log("yahan aaaya", isAuthenticated);
     if (isAuthenticated) {
-      router.replace("/(tabs)/home");
+      // Redirect to home page when authenticated
+      router.replace("/(tabs)");
     }
   }, [isAuthenticated]);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    // Validate form
     if (!email || !password) {
-      alert("Please fill in all fields");
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    login(email, password);
+
+    setIsSubmitting(true);
+
+    try {
+      const success = await login(email, password);
+
+      if (!success) {
+        Alert.alert("Error", "Invalid email or password. Please try again.");
+      } else {
+        console.log("Login successful");
+        // Navigation is handled by the useEffect in this component
+        // that watches for isAuthenticated changes
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleForgotPassword = () => {
     // TODO: Implement forgot password logic
-    alert("Reset password link will be sent to your email");
+    Alert.alert("Info", "Reset password link will be sent to your email");
   };
+
+  // Show loading indicator while checking authentication state
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6c5ce7" />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -77,8 +107,16 @@ export default function LoginScreen() {
           </ThemedText>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <ThemedText style={styles.buttonText}>Login</ThemedText>
+        <TouchableOpacity
+          style={[styles.button, isSubmitting && styles.buttonDisabled]}
+          onPress={handleLogin}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <ThemedText style={styles.buttonText}>Login</ThemedText>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push("/auth/signup")}>
@@ -94,6 +132,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#f8f9fa",
   },
   scrollContent: {
@@ -161,5 +205,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#6c5ce7",
     fontWeight: "500",
+  },
+  buttonDisabled: {
+    opacity: 0.7,
   },
 });

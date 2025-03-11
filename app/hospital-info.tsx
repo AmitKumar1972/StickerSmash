@@ -177,7 +177,9 @@ export default function HospitalInfoScreen() {
       <View style={styles.content}>
         <View style={styles.hospitalCard}>
           <Image
-            source={{ uri: "https://via.placeholder.com/400x200" }}
+            source={{
+              uri: "https://images.unsplash.com/photo-1587351021759-3e566b3db4f1?q=80&w=2574&auto=format&fit=crop",
+            }}
             style={styles.hospitalImage}
           />
           <View style={styles.hospitalInfo}>

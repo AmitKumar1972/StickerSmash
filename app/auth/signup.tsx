@@ -29,7 +29,7 @@ export default function SignupScreen() {
   useEffect(() => {
     if (isAuthenticated) {
       // Redirect to home page when authenticated
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/home");
     }
   }, [isAuthenticated]);
 

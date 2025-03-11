@@ -6,7 +6,7 @@ export default function AuthLayout() {
 
   // If authenticated, redirect to tabs
   if (!isLoading && isAuthenticated) {
-    return <Redirect href="/(tabs)" />;
+    return <Redirect href="/(tabs)/home" />;
   }
 
   return (

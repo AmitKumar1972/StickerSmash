@@ -13,7 +13,7 @@ import { ThemedText } from "../../components/ThemedText";
 import { useAuth } from "../context/auth";
 
 export default function HomeScreen() {
-  const { userType } = useAuth();
+  const { userType, user } = useAuth();
 
   const PatientDashboard = () => (
     <View>
@@ -155,7 +155,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <ThemedText style={styles.greeting}>Good Morning,</ThemedText>
         <ThemedText style={styles.name}>
-          {userType === "patient" ? "Alex" : "Dr. Smith"}
+          {user?.fullName || (userType === "patient" ? "Alex" : "Dr. Smith")}
         </ThemedText>
       </View>
       {userType === "patient" ? <PatientDashboard /> : <DoctorDashboard />}

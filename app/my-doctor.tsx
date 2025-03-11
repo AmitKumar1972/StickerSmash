@@ -81,7 +81,9 @@ export default function MyDoctorScreen() {
         <View style={styles.doctorCard}>
           <View style={styles.doctorHeader}>
             <Image
-              source={{ uri: "https://via.placeholder.com/150" }}
+              source={{
+                uri: "https://randomuser.me/api/portraits/women/14.jpg",
+              }}
               style={styles.doctorImage}
             />
             <View style={styles.doctorInfo}>

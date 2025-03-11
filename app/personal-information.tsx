@@ -107,7 +107,9 @@ export default function PersonalInformationScreen() {
       <View style={styles.content}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={{ uri: "https://via.placeholder.com/150" }}
+            source={{
+              uri: "https://randomuser.me/api/portraits/men/32.jpg",
+            }}
             style={styles.profileImage}
           />
           {isEditing && (

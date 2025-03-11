@@ -18,7 +18,9 @@ export default function ProfileScreen() {
     <View style={styles.header}>
       <View style={styles.profileImageContainer}>
         <Image
-          source={{ uri: "https://via.placeholder.com/100" }}
+          source={{
+            uri: "https://randomuser.me/api/portraits/men/40.jpg",
+          }}
           style={styles.profileImage}
         />
         <TouchableOpacity style={styles.editImageButton}>

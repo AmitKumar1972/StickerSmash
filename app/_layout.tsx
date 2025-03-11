@@ -170,6 +170,8 @@ function RootLayoutNavigator() {
         name="personal-information"
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="my-patients" options={{ headerShown: false }} />
+      <Stack.Screen name="hospital-info" options={{ headerShown: false }} />
     </Stack>
   );
 }

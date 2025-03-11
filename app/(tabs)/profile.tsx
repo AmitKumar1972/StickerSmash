@@ -99,6 +99,10 @@ export default function ProfileScreen() {
                 router.push("/emergency-contacts");
               } else if (item.title === "My Doctor") {
                 router.push("/my-doctor");
+              } else if (item.title === "My Patients") {
+                router.push("/my-patients");
+              } else if (item.title === "Hospital Info") {
+                router.push("/hospital-info");
               }
             }}
           >

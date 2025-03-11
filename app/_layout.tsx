@@ -161,6 +161,15 @@ function RootLayoutNavigator() {
       <Stack.Screen name="record-patient" options={{ headerShown: false }} />
       <Stack.Screen name="relatives" options={{ headerShown: false }} />
       <Stack.Screen name="search-relative" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="emergency-contacts"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="my-doctor" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="personal-information"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

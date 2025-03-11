@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Linking,
+  Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ThemedText } from "../../components/ThemedText";
@@ -22,11 +24,55 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.quickActions}>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => {
+            const phoneNumber = "+918529481972";
+            Linking.canOpenURL(`tel:${phoneNumber}`)
+              .then((supported) => {
+                if (supported) {
+                  return Linking.openURL(`tel:${phoneNumber}`);
+                } else {
+                  Alert.alert(
+                    "Phone call not supported",
+                    "Your device does not support making phone calls"
+                  );
+                }
+              })
+              .catch((err) =>
+                Alert.alert(
+                  "Error",
+                  "An error occurred while trying to make the call"
+                )
+              );
+          }}
+        >
           <FontAwesome5 name="phone" size={24} color="#6c5ce7" />
           <ThemedText style={styles.actionText}>Emergency Call</ThemedText>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => {
+            const phoneNumber = "+918529481972";
+            Linking.canOpenURL(`tel:${phoneNumber}`)
+              .then((supported) => {
+                if (supported) {
+                  return Linking.openURL(`tel:${phoneNumber}`);
+                } else {
+                  Alert.alert(
+                    "Phone call not supported",
+                    "Your device does not support making phone calls"
+                  );
+                }
+              })
+              .catch((err) =>
+                Alert.alert(
+                  "Error",
+                  "An error occurred while trying to make the call"
+                )
+              );
+          }}
+        >
           <FontAwesome5 name="user-md" size={24} color="#6c5ce7" />
           <ThemedText style={styles.actionText}>Contact Doctor</ThemedText>
         </TouchableOpacity>
@@ -202,7 +248,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   statNumber: {
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#6c5ce7",
   },

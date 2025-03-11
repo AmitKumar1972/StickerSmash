@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 20,
-    marginTop: -20,
+    marginTop: -10,
   },
   statCard: {
     backgroundColor: "#ffffff",
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   statNumber: {
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#6c5ce7",
   },

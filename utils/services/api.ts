@@ -3,7 +3,7 @@ import { getToken } from "./auth";
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: "http://localhost:3000/api", // Our NestJS server URL
+  baseURL: "https://3aeb-124-253-202-246.ngrok-free.app/api", // Our NestJS server URL
   headers: {
     "Content-Type": "application/json",
   },

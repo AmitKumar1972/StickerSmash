@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import { useAuth } from "../context/auth";
 
 export default function ProfileScreen() {
-  const { userType, logout } = useAuth();
+  const { userType, logout, user } = useAuth();
 
   const ProfileHeader = () => (
     <View style={styles.header}>
@@ -26,9 +26,12 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
       <ThemedText style={styles.userName}>
-        {userType === "patient" ? "Alex Johnson" : "Dr. Sarah Smith"}
+        {user?.fullName ||
+          (userType === "patient" ? "Alex Johnson" : "Dr. Sarah Smith")}
       </ThemedText>
-      <ThemedText style={styles.userEmail}>user@example.com</ThemedText>
+      <ThemedText style={styles.userEmail}>
+        {user?.email || "user@example.com"}
+      </ThemedText>
     </View>
   );
 
@@ -84,7 +87,19 @@ export default function ProfileScreen() {
     return (
       <View style={styles.settingsContainer}>
         {menuItems.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.menuItem}>
+          <TouchableOpacity
+            key={index}
+            style={styles.menuItem}
+            onPress={() => {
+              if (item.title === "Personal Information") {
+                router.push("/personal-information");
+              } else if (item.title === "Emergency Contacts") {
+                router.push("/emergency-contacts");
+              } else if (item.title === "My Doctor") {
+                router.push("/my-doctor");
+              }
+            }}
+          >
             <View style={styles.menuIcon}>
               <FontAwesome5 name={item.icon} size={20} color="#6c5ce7" />
             </View>
